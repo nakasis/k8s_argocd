@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: nginx-helm-demo
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/sunnyaws1984/my-argo-demo.git   # your GitHub repo
+    targetRevision: main                                        # branch name
+    path: helm/nginx                                            # folder where Chart.yaml lives
+    helm:
+      valueFiles:
+        - values.yaml                                           # optional if defaults are fine
+  destination:
+    server: https://kubernetes.default.svc                      # points to current cluster
+    namespace: dev                                             # namespace to deploy
+  syncPolicy:
+    automated:                                                  # enable auto-sync
+      prune: true
+      selfHeal: true
